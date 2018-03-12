@@ -1,0 +1,114 @@
+# File
+exportSelection,mel.eval('ExportSelectionOptions;')
+optimizeSceneSize,mel.eval('OptimizeSceneOptions;')
+
+# Edit
+deleteHistory,mel.eval('DeleteHistory;')
+selectHierarchy,mel.eval('SelectHierarchy;')
+duplicate,mel.eval('Duplicate;')
+instance,cmds.instance()
+duplicateSpecial('DuplicateSpecialOptions;')
+
+# Modify
+freezeTransformations,mel.eval('FreezeTransformations;')
+freezeTransformationsOptions,mel.eval('FreezeTransformationsOptions;')
+centerPivot,mel.eval('CenterPivot;')
+addAttribute,mel.eval('AddAttribute;')
+editAttribute,mel.eval('RenameAttribute;')
+deleteAttribute,mel.eval('DeleteAttribute;')
+nurbsToPolygons,mel.eval('NURBSToPolygonsOptions;')
+polygonsEdgeToCurve,mel.eval('CreateCurveFromPolyOptions;')
+duplicateSpecial,mel.eval('DuplicateSpecialOptions;')
+
+# create
+# polygon
+sphere,mel.eval('polySphere -r 1 -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1;')
+polySphere,mel.eval('polySphere -r 1 -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1;')
+cube,mel.eval('polyCube -w 1 -h 1 -d 1 -sx 1 -sy 1 -sz 1 -ax 0 1 0 -cuv 4 -ch 1;')
+polyCube,mel.eval('polyCube -w 1 -h 1 -d 1 -sx 1 -sy 1 -sz 1 -ax 0 1 0 -cuv 4 -ch 1;')
+cylinder,mel.eval('polyCylinder -r 1 -h 2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;')
+polyCylinder,mel.eval('polyCylinder -r 1 -h 2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;')
+cone,mel.eval('polyCone -r 1 -h 2 -sx 20 -sy 1 -sz 0 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;')
+polyCone,mel.eval('polyCone -r 1 -h 2 -sx 20 -sy 1 -sz 0 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;')
+plane,mel.eval('polyPlane -w 1 -h 1 -sx 10 -sy 10 -ax 0 1 0 -cuv 2 -ch 1;')
+polyPlane,mel.eval('polyPlane -w 1 -h 1 -sx 10 -sy 10 -ax 0 1 0 -cuv 2 -ch 1;')
+torus,mel.eval('polyTorus -r 1 -sr 0.5 -tw 0 -sx 20 -sy 20 -ax 0 1 0 -cuv 1 -ch 1;')
+polyTorus,mel.eval('polyTorus -r 1 -sr 0.5 -tw 0 -sx 20 -sy 20 -ax 0 1 0 -cuv 1 -ch 1;')
+prism,mel.eval('polyPrism -l 2 -w 1 -ns 3 -sh 1 -sc 0 -ax 0 1 0 -cuv 3 -ch 1;')
+polyPrism,mel.eval('polyPrism -l 2 -w 1 -ns 3 -sh 1 -sc 0 -ax 0 1 0 -cuv 3 -ch 1;')
+pyramid,mel.eval('polyPyramid -w 1 -ns 4 -sh 1 -sc 0 -ax 0 1 0 -cuv 3 -ch 1;')
+polyPyramid,mel.eval('polyPyramid -w 1 -ns 4 -sh 1 -sc 0 -ax 0 1 0 -cuv 3 -ch 1;')
+pipe,mel.eval('polyPipe -r 1 -h 2 -t 0.5 -sa 20 -sh 1 -sc 0 -ax 0 1 0 -cuv 1 -rcp 0 -ch 1;')
+polyPipe,mel.eval('polyPipe -r 1 -h 2 -t 0.5 -sa 20 -sh 1 -sc 0 -ax 0 1 0 -cuv 1 -rcp 0 -ch 1;')
+helix,mel.eval('polyHelix -c 3 -h 2 -w 2 -r 0.4 -sa 8 -sco 50 -sc 0 -d 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;')
+polyHelix,mel.eval('polyHelix -c 3 -h 2 -w 2 -r 0.4 -sa 8 -sco 50 -sc 0 -d 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;')
+platonic,mel.eval('polyPlatonicSolid -r 1 -l 0.7137 -ax 0 1 0 -st 0  -cuv 4 -ch 1;')
+polyPlatonicSolid,mel.eval('polyPlatonicSolid -r 1 -l 0.7137 -ax 0 1 0 -st 0  -cuv 4 -ch 1;')
+# camera
+camera,camera -centerOfInterest 5 -focalLength 35 -lensSqueezeRatio 1 -cameraScale 1 -horizontalFilmAperture 1.41732 -horizontalFilmOffset 0 -verticalFilmAperture 0.94488 -verticalFilmOffset 0 -filmFit Fill -overscan 1 -motionBlur 0 -shutterAngle 144 -nearClipPlane 0.01 -farClipPlane 1000 -orthographic 0 -orthographicWidth 30 -panZoomEnabled 0 -horizontalPan 0 -verticalPan 0 -zoom 1; objectMoveCommand; cameraMakeNode 1 "";
+# curve
+CVCurveTool,mel.eval('CVCurveTool;')
+EPCurveTool,mel.eval('EPCurveTool')
+BezierCurveTool,mel.eval('CreateBezierCurveTool;')
+PencilCurveTool,mel.eval('PencilCurveTool;')
+# measure   
+DistanceTool,mel.eval('DistanceTool;')
+ParameterTool,mel.eval('ParameterTool;')
+ArcLengthTool,mel.eval('ArcLengthTool;')
+# create other
+text,mel.eval('CreateTextOptions;')
+locator,mel.eval('CreateLocator;')
+set,mel.eval('CreateSet')
+
+# Mesh
+combine,mel.eval('CombinePolygons;')
+separate,mel.eval('SeparatePolygon;')
+extract,mel.eval('ExtractFace;')
+union,mel.eval('PolygonBooleanUnion;')
+difference,mel.eval('PolygonBooleanDifference;')
+intersection,mel.eval('PolygonBooleanIntersection;')
+smooth,mel.eval('SmoothPolygon;')
+transferAttributes,mel.eval('performTransferAttributes 1;')
+reduce,mel.eval('ReducePolygonOptions;')
+cleanup,mel.eval('CleanupPolygonOptions;')
+triangulate,mel.eval('Triangulate;')
+quadrangulate,mel.eval('QuadrangulateOptions;')
+fillHole,mel.eval('FillHole;')
+polygon,mel.eval('CreatePolygonTool;')
+sculptGeometryTool,mel.eval('artPuttyProperties;')
+mirrorGeometry,mel.eval('MirrorPolygonGeometryOptions;')
+
+# Edit Mesh
+extrude,mel.eval('PolyExtrude;')
+appendToPolygonTool,mel.eval('AppendToPolygonTool;')
+cutFacesTool,mel.eval('CutPolygon;')
+edgeLoopTool,mel.eval('SplitEdgeRingTool;')
+addDivisions,mel.eval('SubdividePolygonOptions;')
+merge,mel.eval('PolyMerge;')
+deleteVertex,mel.eval('polyDeleteVertex;')
+deleteEdge,mel.eval('performPolyDeleteElements;')
+bevel,mel.eval('BevelPolygon;')
+
+# Normals
+lockNormals,mel.eval('polyNormalPerVertex -fn true;')
+unlockNormals,mel.eval('polyNormalPerVertex -ufn true;')
+averageNormals,mel.eval('AveragePolygonNormals;')
+
+# Particles
+particle,mel.eval('ParticleToolOptions;')
+particleEmitter,mel.eval('CreateEmitter;')
+emitFromObject,mel.eval('EmitFromObject;')
+makeCollide,mel.eval('MakeCollide;')
+goal,mel.eval('Goal;')
+instancer,mel.eval('ParticleInstancerOptions;')
+spriteWizard,mel.eval('spriteWizardMenu;')
+
+# Fluid
+fluidContainer,mel.eval('Create3DContainer;')
+
+quit,mel.eval('Quit')
+
+# Diaplay options
+wireframeOnShaded,import display;reload(display);display.wireframe()
+grid,import display;reload(display);display.grid()
+xray,import display;reload(display);display.xray()

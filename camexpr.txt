@@ -1,0 +1,116 @@
+float $pi = 3.14159265359; 
+
+// unit: mm
+proc float angleOfViewDeg(float $focalLength, float $aperture)
+{
+	return 2*(atan((0.5*$aperture)/$focalLength)*180/$pi);
+}
+
+proc float angleOfView(float $focalLength, float $aperture)
+{
+	return 2*(atan((0.5*$aperture)/$focalLength));
+}
+
+proc float lerp(float $a, float$b, float $v) 
+{
+return $a + $v * ($b-$a);
+}
+
+if(cam_Gp.mode == 0)
+{
+	string $targets[] = {"Full", "Bust", "CustomA", "CustomB", "CustomC"};
+	string $postfix = $targets[0];
+	int $loop = 159;
+	int $max = $loop * size($targets);
+	int $i;
+	for($i=0; $i<size($targets); $i++)
+	{
+		if(frame%$max>$loop*$i && frame%$max<$loop*($i+1))
+		{
+			setAttr ("sphere"+$targets[$i]+".visibility") 1; 
+			$postfix = $targets[$i];
+		}
+		else
+		{
+			setAttr ("sphere"+$targets[$i]+".visibility") 0; 
+		}
+	}
+
+	roll.translateX = `getAttr ("roll"+$postfix+".translateX")`;
+	roll.translateY = `getAttr ("roll"+$postfix+".translateY")`;
+	roll.translateZ = `getAttr ("roll"+$postfix+".translateZ")`;
+	roll.rotateX = `getAttr ("roll"+$postfix+".rotateX")`;
+	roll.rotateY = `getAttr ("roll"+$postfix+".rotateY")`;
+	roll.rotateZ = `getAttr ("roll"+$postfix+".rotateZ")`;
+	height.translateY = `getAttr ("height"+$postfix+".translateY")`;
+	away.translateZ = `getAttr ("away"+$postfix+".translateZ")`;
+	cam.translateX = `getAttr ("cam"+$postfix+".translateX")`;
+	cam.translateY = `getAttr ("cam"+$postfix+".translateY")`;
+	cam.translateZ = `getAttr ("cam"+$postfix+".translateZ")`;
+	cam.rotateX = `getAttr ("cam"+$postfix+".rotateX")`;
+	cam.rotateY = `getAttr ("cam"+$postfix+".rotateY")`;
+	cam.rotateZ = `getAttr ("cam"+$postfix+".rotateZ")`;
+	camShape.focalLength = `getAttr ("cam"+$postfix+".focalLength")`;
+}
+else if(cam_Gp.mode == 1)
+{
+	string $refCam = "camBust";
+	string $rendCam = "cam";
+	string $rendOffset = "offset";
+
+	int $startFrame = 1;
+	int $still = 5;
+	int $blend = 10;
+	float $lenses[] = {14, 21, 28, 35, 50, 80, 150, 250};
+	int $loop = size($lenses) * $still + size($lenses) * ($blend-1);
+
+	float $bk_t = `currentTime -q`;
+	float $reftrans[] = `xform -q -ws -t ($refCam)`;
+	float $dist_init = $reftrans[2];
+	float $flen_init = `getAttr ($refCam + ".focalLength")`;
+	float $haperture = `getAttr ($refCam + ".horizontalFilmAperture")`;
+	float $aov_init = angleOfView($flen_init, $haperture);
+	float $wscreen = tan(($aov_init/2.0)*$dist_init);
+
+	float $dist_away = awayRef.translateZ;
+	height.translateY = heightRef.translateY;
+	away.translateZ = $dist_away;
+	offset.rotateX = `getAttr ($refCam+".rotateX")`;
+	offset.rotateY = `getAttr ($refCam+".rotateY")`;
+	offset.rotateZ = `getAttr ($refCam+".rotateZ")`;
+
+
+	int $span = $still+$blend+$startFrame;
+	int $spans = size($lenses);
+
+	int $lens_index = int($bk_t / $span);
+	int $index = $bk_t % $span;
+	float $flen_cur = $lenses[$lens_index];
+
+	if($lens_index + 1 < $spans)
+	{
+		if($index <= $still)
+		{
+		}
+		else
+		{
+			$flen_cur = lerp(float($flen_cur), float($lenses[$lens_index+1]), ($index-$still)/float($blend));
+		}
+	}
+	else
+	{
+		$flen_cur = $lenses[$spans-1];
+	}
+
+	setAttr ($rendCam + ".focalLength") $flen_cur;
+
+	string $cmd = "focalLength = " + $flen_cur + ";";
+	$cmd += "print('Focal Length: %.2f mm' % focalLength)";
+	python($cmd);
+
+	float $flen_cur = `getAttr ($rendCam+".focalLength")`;
+	float $aov_cur = angleOfView($flen_cur, $haperture);
+	float $dist_cur = $wscreen / tan($aov_cur/2.0);
+
+	setAttr ($rendCam+".translateZ") ($dist_cur - $dist_away);
+}

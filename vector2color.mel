@@ -1,0 +1,18 @@
+{
+string $f = "fluidShape1";
+float $res[] = `getAttr ($f+".resolution")`;
+print($res);
+int $x = $res[0];
+int $y = $res[1];
+int $z = $res[2];
+
+int $xi, $yi;
+for($xi=0;$xi<$x;$xi++)
+{
+    for($yi=0;$yi<$y;$yi++)
+    {
+        float $vel[] = `getFluidAttr -at "velocity" -xi $xi -yi $yi -zi 0 $f`;
+        setFluidAttr -at color -vv $vel[0] $vel[1] $vel[2] -xi $xi -yi $yi -zi 0 $f;
+    }
+}
+}
