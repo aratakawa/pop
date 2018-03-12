@@ -1,0 +1,71 @@
+string $targets[] = {"Full", "Bust"};
+string $rendCam = "cam";
+
+int $startFrame = 1;
+int $still = 5;
+int $blend = 10;
+int $rot[] = {0, 45};
+float $lenses[] = {14, 21, 28, 35, 50, 80, 150, 250};
+int $loop = size($lenses) * $still + size($lenses) * ($blend-1);
+int $wloop = size($rot)*$loop;
+
+float $bk_t = `currentTime -q`;
+
+if($bk_t < size($targets)*$wloop)
+{
+	int $targetIndex = int($bk_t/$wloop);
+	int $rotIndex = int($bk_t/$loop);
+	int $loopIndex = $bk_t % $loop;
+	cam_Gp.rotateY = $rot[$rotIndex];
+	
+	string $refCam = ("cam"+$targets[$targetIndex]);
+
+	float $reftrans[] = `xform -q -ws -t ($refCam)`;
+	float $dist_init = $reftrans[2];
+	float $flen_init = `getAttr ($refCam + ".focalLength")`;
+	float $haperture = `getAttr ($refCam + ".horizontalFilmAperture")`;
+	float $aov_init = angleOfView($flen_init, $haperture);
+	float $wscreen = tan(($aov_init/2.0)*$dist_init);
+
+
+	float $dist_away = `getAttr ("away"+$targets[$targetIndex]+".translateZ")`;
+	height.translateY = `getAttr ("height"+$targets[$targetIndex]+".translateY")`;
+	away.translateZ = $dist_away;
+	offset.rotateX = `getAttr ("offset"+$targets[$targetIndex]+".rotateX")`;
+	offset.rotateY = `getAttr ("offset"+$targets[$targetIndex]+".rotateY")`;
+	offset.rotateZ = `getAttr ("offset"+$targets[$targetIndex]+".rotateZ")`;
+
+	int $span = $still+$blend+$startFrame;
+	int $spans = size($lenses);
+
+	int $lens_index = int($loopIndex / $span);
+	int $index = $bk_t % $span;
+	float $flen_cur = $lenses[$lens_index];
+
+	if($lens_index + 1 < $spans)
+	{
+		if($index <= $still)
+		{
+		}
+		else
+		{
+			$flen_cur = lerp(float($flen_cur), float($lenses[$lens_index+1]), ($index-$still)/float($blend));
+		}
+	}
+	else
+	{
+		$flen_cur = $lenses[$spans-1];
+	}
+
+	setAttr ($rendCam + ".focalLength") $flen_cur;
+
+	string $cmd = "focalLength = " + $flen_cur + ";";
+	$cmd += "print('Focal Length: %.2f mm' % focalLength)";
+	python($cmd);
+
+	float $flen_cur = `getAttr ($rendCam+".focalLength")`;
+	float $aov_cur = angleOfView($flen_cur, $haperture);
+	float $dist_cur = $wscreen / tan($aov_cur/2.0);
+
+	setAttr ($rendCam+".translateZ") ($dist_cur - $dist_away);
+}

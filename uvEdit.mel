@@ -1,0 +1,38 @@
+string $win = "uvEdit";
+string $scaleU = $win + "ScaleU";
+string $scaleV = $win + "ScaleV";
+string $offsetU = $win + "OffsetU";
+string $offsetV = $win + "OffsetV";
+
+global proc uvEditDoScale()
+{
+  float $su = `floatField -q -v "uvEditScaleU"`;
+  float $sv = `floatField -q -v "uvEditScaleV"`;
+  polyEditUV -r true -su $su -sv $sv; 
+}
+
+global proc uvEditDoOffset()
+{
+  float $u = `floatField -q -v "uvEditOffsetU"`;
+  float $v = `floatField -q -v "uvEditOffsetV"`;
+  polyEditUV -r true -u $u -v $v;
+}
+
+if( `window -q -ex $win` )
+  deleteUI $win;
+
+window -title $win $win;
+columnLayout ($win+"Root");
+rowColumnLayout -nc 3;
+floatField -v 1 $scaleU;
+floatField -v 1 $scaleV;
+button -label "Scale UV" -c uvEditDoScale;
+setParent "..";
+
+rowColumnLayout -nc 3;
+floatField -v 0 $offsetU;
+floatField -v 0 $offsetV;
+button -label "Offset UV" -c uvEditDoOffset;
+setParent "..";
+
+showWindow( $win );
